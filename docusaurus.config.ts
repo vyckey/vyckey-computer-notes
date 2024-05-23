@@ -51,7 +51,29 @@ const config: Config = {
         showLastUpdateAuthor: true,
         showLastUpdateTime: true,
         remarkPlugins: [remarkMath],
-          rehypePlugins: [rehypeKatex],
+        rehypePlugins: [rehypeKatex],
+      }),
+    ],
+    [
+      'content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'java',
+        path: 'java',
+        routeBasePath: 'java',
+        // editUrl: ({locale, versionDocsDirPath, docPath}) => {
+        //   if (locale !== defaultLocale) {
+        //     return `https://crowdin.com/project/docusaurus-v2/${locale}`;
+        //   }
+        //   return `https://github.com/facebook/docusaurus/edit/main/website/${versionDocsDirPath}/${docPath}`;
+        // },
+        // remarkPlugins: [npm2yarn],
+        editCurrentVersion: true,
+        sidebarPath: require.resolve('./sidebars.js'),
+        showLastUpdateAuthor: true,
+        showLastUpdateTime: true,
+        remarkPlugins: [remarkMath],
+        rehypePlugins: [rehypeKatex],
       }),
     ],
   ],
@@ -66,8 +88,8 @@ const config: Config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-            remarkPlugins: [remarkMath],
-            rehypePlugins: [rehypeKatex],
+          remarkPlugins: [remarkMath],
+          rehypePlugins: [rehypeKatex],
         },
         blog: {
           showReadingTime: true,
@@ -97,8 +119,10 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Computer',
         },
+        {to: '/java', label: 'Java Notes', position: 'left'},
+        {to: '/ai', label: 'AI Notes', position: 'left'},
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/vyckey/vyckey-computer-notes',
@@ -114,8 +138,12 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/intro',
+              label: 'Java',
+              to: '/java',
+            },
+            {
+              label: 'AI',
+              to: '/ai',
             },
           ],
         },
@@ -123,16 +151,8 @@ const config: Config = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
+              label: 'Wechat',
+              href: 'https://wechat.com/vyckey',
             },
           ],
         },
