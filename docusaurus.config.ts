@@ -1,10 +1,12 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 const config: Config = {
   title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  tagline: 'Programmer are cool ~',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -15,8 +17,8 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'vyckey', // Usually your GitHub org/user name.
+  projectName: 'vyckey-computer-notes', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -29,6 +31,31 @@ const config: Config = {
     locales: ['en'],
   },
 
+  plugins: [
+    [
+      'content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'ai',
+        path: 'ai',
+        routeBasePath: 'ai',
+        // editUrl: ({locale, versionDocsDirPath, docPath}) => {
+        //   if (locale !== defaultLocale) {
+        //     return `https://crowdin.com/project/docusaurus-v2/${locale}`;
+        //   }
+        //   return `https://github.com/facebook/docusaurus/edit/main/website/${versionDocsDirPath}/${docPath}`;
+        // },
+        // remarkPlugins: [npm2yarn],
+        editCurrentVersion: true,
+        sidebarPath: require.resolve('./sidebars.js'),
+        showLastUpdateAuthor: true,
+        showLastUpdateTime: true,
+        remarkPlugins: [remarkMath],
+          rehypePlugins: [rehypeKatex],
+      }),
+    ],
+  ],
+
   presets: [
     [
       'classic',
@@ -39,6 +66,8 @@ const config: Config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            remarkPlugins: [remarkMath],
+            rehypePlugins: [rehypeKatex],
         },
         blog: {
           showReadingTime: true,
