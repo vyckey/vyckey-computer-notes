@@ -1,8 +1,8 @@
 ---
-title: Database
+title: Introduction
 tags: [database]
-sidebar_label: Database
-sidebar_position: 4
+sidebar_label: Introduction
+sidebar_position: 1
 ---
 
 # 数据库基础知识

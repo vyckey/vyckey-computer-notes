@@ -1,3 +1,12 @@
+---
+title: JavaScript
+tags: [frontend, js]
+sidebar_label: JavaScript
+sidebar_position: 3
+---
+
+# JavaScript
+
 # 参考资料
 
 * [掘金 - 一看就懂的var、let、const三者区别](https://juejin.cn/post/6925641096152399880)

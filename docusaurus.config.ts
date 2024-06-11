@@ -84,6 +84,51 @@ const config: Config = {
         rehypePlugins: [rehypeKatex],
       }),
     ],
+    [
+      'content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'middleware',
+        path: 'middleware',
+        routeBasePath: 'middleware',
+        editCurrentVersion: true,
+        sidebarPath: require.resolve('./sidebars.js'),
+        showLastUpdateAuthor: true,
+        showLastUpdateTime: true,
+        remarkPlugins: [remarkMath],
+        rehypePlugins: [rehypeKatex],
+      }),
+    ],
+    [
+      'content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'bigdata',
+        path: 'bigdata',
+        routeBasePath: 'bigdata',
+        editCurrentVersion: true,
+        sidebarPath: require.resolve('./sidebars.js'),
+        showLastUpdateAuthor: true,
+        showLastUpdateTime: true,
+        remarkPlugins: [remarkMath],
+        rehypePlugins: [rehypeKatex],
+      }),
+    ],
+    [
+      'content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'frontend',
+        path: 'frontend',
+        routeBasePath: 'Frontend',
+        editCurrentVersion: true,
+        sidebarPath: require.resolve('./sidebars.js'),
+        showLastUpdateAuthor: true,
+        showLastUpdateTime: true,
+        remarkPlugins: [remarkMath],
+        rehypePlugins: [rehypeKatex],
+      }),
+    ],
   ],
 
   presets: [
@@ -130,8 +175,11 @@ const config: Config = {
           label: 'Computer',
         },
         {to: '/database', label: 'Database', position: 'left'},
-        {to: '/java', label: 'Java Notes', position: 'left'},
-        {to: '/ai', label: 'AI Notes', position: 'left'},
+        {to: '/java', label: 'Java', position: 'left'},
+        {to: '/middleware', label: 'Middleware', position: 'left'},
+        {to: '/bigdata', label: 'Bigdata', position: 'left'},
+        {to: '/ai', label: 'AI', position: 'left'},
+        {to: '/frontend', label: 'Frontend', position: 'left'},
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/vyckey/vyckey-computer-notes',
