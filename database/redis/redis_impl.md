@@ -141,7 +141,7 @@ typedef struct zskiplistNode {
 } zskiplistNode;
 ```
 
-![](../../../static/images/database/redis/redis_skiplist.png)
+![](../../static/images/database/redis/redis_skiplist.png)
 
 算法原理详解，请看[Skip-List算法](../../algorithm/skip-list.md)。
 
@@ -283,7 +283,7 @@ typedef struct redisObject {
 
 Redis数据类型以及编码对应关系如下：
 
-![Redis数据类型以及编码对应关系](../../../static/images/database/redis/redis_obj_type_encodings.svg)
+![Redis数据类型以及编码对应关系](../../static/images/database/redis/redis_obj_type_encodings.svg)
 
 #### 字符串对象
 
@@ -534,7 +534,7 @@ typedef struct multiCmd {
 } multiCmd;
 ```
 
-![Redis事务实现](../../../static/images/database/redis/redis_trx_process.svg)
+![Redis事务实现](../../static/images/database/redis/redis_trx_process.svg)
 
 ```python
 def execute_transaction():

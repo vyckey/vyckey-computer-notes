@@ -547,24 +547,131 @@ public class MyBlockingQueue {
 
 # JDK 中内置的工具锁
 
+## 锁的一些特性
+
+公平锁和非公平锁：
+
+* **公平锁**： 锁被释放之后，先申请的线程先得到锁。性能较差一些，因为公平锁为了保证时间上的绝对顺序，上下文切换更频繁。
+* **非公平锁**：锁被释放之后，后申请的线程可能会先获取到锁，是随机或者按照其他优先级排序的。性能更好，但可能会导致某些线程永远无法获取到锁。
+
+共享锁和独占锁：
+
+* **共享锁**：一把锁可以被多个线程同时获得。
+* **独占锁**：一把锁只能被一个线程获得。
+
+
+可中断锁和不可中断锁：
+
+* **可中断锁**：获取锁的过程中可以被中断，不需要一直等到获取锁之后 才能进行其他逻辑处理。 `ReentrantLock` 就属于是可中断锁。
+* **不可中断锁**：一旦线程申请了锁，就只能等到拿到锁以后才能进行其他的逻辑处理。 `synchronized` 就属于是不可中断锁。
+
 ## ReentrantLock
+
+`ReentrantLock` 提供了与 `synchronized` 类似的同步功能，但其提供了更灵活、更强大的功能，比如**轮询、超时、中断、公平/非公平锁**等高级功能。
+
+`ReentrantLock` 实现了 `Lock` 接口，是一个可重入且独占式的锁，里面有一个内部类 `Sync`，`Sync` 继承 `AQS`（`AbstractQueuedSynchronizer`），添加锁和释放锁的大部分操作实际上都是在 `Sync` 中实现的。 `ReentrantLock` 默认使用非公平锁，也可以通过构造器来显式地指定使用公平锁。
+
+```java
+public interface Lock {
+    /**
+     * Acquires the lock.
+     */
+    void lock();
+
+    /**
+     * Acquires the lock unless the current thread is {@linkplain Thread#interrupt interrupted}.
+     */
+    void lockInterruptibly() throws InterruptedException;
+
+    /**
+     * Acquires the lock only if it is free at the time of invocation.
+     */
+    boolean tryLock();
+
+    /**
+     * Acquires the lock if it is free within the given waiting time and the
+     * current thread has not been {@linkplain Thread#interrupt interrupted}.
+     */
+    boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
+
+    /**
+     * Releases the lock.
+     */
+    void unlock();
+
+    /**
+     * Returns a new {@link Condition} instance that is bound to this {@code Lock} instance.
+     */
+    Condition newCondition();
+}
+```
 
 ## ReentrantReadWriteLock
 
+`ReentrantReadWriteLock` 实现了 `ReadWriteLock` ，是一个可重入的读写锁，既可以保证多个线程同时读的效率，同时又可以保证有写入操作时的线程安全。
+
+```java
+public interface ReadWriteLock {
+    /**
+     * Returns the lock used for reading.
+     */
+    Lock readLock();
+
+    /**
+     * Returns the lock used for writing.
+     */
+    Lock writeLock();
+}
+```
+
+## StampedLock
+
+`StampedLock` 是 JDK 1.8 引入的性能更好的读写锁，不可重入且不支持条件变量 `Condition`。不同于一般的 `Lock` 类，`StampedLock` 并不是直接实现 `Lock` 或 `ReadWriteLock` 接口，而是基于 `CLH` 锁 独立实现的。
+
+`StampedLock` 提供了三种模式的读写控制模式：
+
+* 写锁：独占锁，一把锁只能被一个线程获得。当一个线程获取写锁后，其他请求读锁和写锁的线程必须等待。类似于 ReentrantReadWriteLock 的写锁，不过这里的写锁是不可重入的。
+* 读锁 （悲观读）：共享锁，没有线程获取写锁的情况下，多个线程可以同时持有读锁。如果己经有线程持有写锁，则其他线程请求获取该读锁会被阻塞。类似于 ReentrantReadWriteLock 的读锁，不过这里的读锁是不可重入的。
+* 乐观读：允许多个线程获取乐观读以及读锁。同时允许一个写线程获取写锁。
+
+另外， `StampedLock` 还支持这三种锁在一定条件下进行相互转换。
+
+`StampedLock` 比较适合读多写少的场景，因为其采用乐观锁的机制，所以比 `ReadWriteLock` 性能更好。不过，需要注意的是 `StampedLock` 不可重入，不支持条件变量 `Condition` ，对中断操作支持也不友好（使用不当容易导致 CPU 飙升）。
+
 ## Semaphore
+
+`synchronized` 和 `ReentrantLock` 都是一次只允许一个线程访问某个资源，而 `Semaphore` (信号量)可以用来控制**同时访问特定资源的线程数量**。
+
+`Semaphore` 通常用于那些资源有明确访问数量限制的场景。
 
 ## CountDownLatch
 
 `CountDownLatch` 可以使一个或多个线程等待，直到其他线程的一系列操作完成，用来实现多线程屏障。
 
-SynchronousQueue
+### 使用场景
+
+场景一：等待n个线程执行完毕，实现多线程屏障
+
+将 `CountDownLatch` 的计数器初始化为 `n` ，每当一个任务线程执行完毕，就将计数器减 `1`（`countdownlatch.countDown()`），当计数器的值变为 `0` 时，在 `CountDownLatch` 上 `await()` 的线程就会被唤醒。
+
+场景二：尽可能地让多个线程并行执行
+
+多个线程在某一时刻同时开始执行，类似于赛跑，将多个线程放到起点，等待发令枪响，然后同时开跑。
+
+## CyclicBarrier
+
+`CyclicBarrier` 和 `CountDownLatch` 非常类似，它也可以实现多线程屏障，但是它的功能比 `CountDownLatch` 更加复杂和强大。主要应用场景和 `CountDownLatch` 类似。
+
+## SynchronousQueue
 
 
 # 参考资料
 
 * [掘金 - (四)深入理解Java并发编程之无锁CAS机制、魔法类Unsafe、原子包Atomic](https://juejin.cn/post/7078545790594973733)
+* [JavaGuide - Java并发常见面试题总结](https://javaguide.cn/java/concurrent/java-concurrent-questions-02.html)
 * [JavaGuide - AQS详解](https://javaguide.cn/java/concurrent/aqs.html)
 * [掘金 - Synchronized解析—如果你愿意一层一层剥开我的心](https://juejin.cn/post/6844903918653145102)
 * [掘金 - 为什么wait和notify必须放在synchronized中？](https://juejin.cn/post/7067322092936495112)
 * [掘金 - 浅谈偏向锁、轻量级锁、重量级锁](https://juejin.cn/post/6844903550586191885)
 * [掘金 - (二)彻底理解Java并发编程之Synchronized关键字实现原理剖析](https://juejin.cn/post/6977744582725681182)
+* [Segmentfault - StampedLock 底层原理分析](https://segmentfault.com/a/1190000015808032)

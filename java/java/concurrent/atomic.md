@@ -398,6 +398,8 @@ public native void unpark(Object thread);
 
 ## 内存屏障
 
+内存屏障（Memory Barrier）就是通过阻止屏障两边的**指令重排序**从而避免编译器和硬件的不正确优化情况。
+
 ```java
 //在该方法之前的所有读操作，一定在load屏障之前执行完成
 public native void loadFence();
@@ -437,4 +439,5 @@ public native  void ensureClassInitialized(Class<?> c);
 # 参考资料
 
 * [JavaGuide - Atomic原子类总结](https://javaguide.cn/java/concurrent/atomic-classes.html)
+* [JavaGuide - Java 魔法类 Unsafe 详解](https://javaguide.cn/java/basis/unsafe.html)
 * [掘金 - (四)深入理解Java并发编程之无锁CAS机制、魔法类Unsafe、原子包Atomic](https://juejin.cn/post/7078545790594973733)

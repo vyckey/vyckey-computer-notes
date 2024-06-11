@@ -16,7 +16,7 @@ InnoDB存储引擎中，所有数据都被逻辑存放在一个空间中，成�
 * 页（page）：也成为块block。默认大小为16KB，也就是一个区有64个页。页的大小可以通过 `innodb_page_size` 参数来指定。常见的页类型有：数据页、undo页、系统页、事务数据页、插入缓冲位图页、插入缓冲空闲列表页、未压缩的二进制大对象页、压缩的二进制大对象页等。
 * 行（row）：InnoDB引擎按行存储数据。
 
-![InnoDB逻辑存储结构](../../../../static/images/database/mysql/innodb_table_space.png)
+![InnoDB逻辑存储结构](../../../static/images/database/mysql/innodb_table_space.png)
 
 默认情况下所有表都存放到共享表空间中，用户可以启用 `innodb_file_per_table` 参数让每张表的数据单独存放到一个表空间中，需要注意的是，每张表的表空间只存放数据、索引和插入缓冲Bitmap页，其他数据，例如回滚日志、插入缓冲索引页、系统事务信息、二次写缓冲等还是存放到共享表空间中。
 
@@ -28,12 +28,12 @@ MySQL默认在版本5.0之前采用 Redundant 的行格式，5.0以及之后5.7�
 
 Redundant行格式是在MySQL5.0版本之前的行记录存储格式。
 
-<table border="none">
+<table style={{border:'none'}}>
     <tbody>
-        <td style="background:red;color:white;">字段长度偏移列表</td>
-        <td style="background:blue;color:white;">记录头信息</td>
-        <td style="background:green;color:white;">隐藏列</td>
-        <td style="background:pink;color:white;">不为NULL值的列值</td>
+        <td style={{background:'red', color:'white'}}>字段长度偏移列表</td>
+        <td style={{background:'blue', color:'white'}}>记录头信息</td>
+        <td style={{background:'green', color:'white'}}>隐藏列</td>
+        <td style={{background:'pink', color:'white'}}>不为NULL值的列值</td>
     </tbody>
 </table>
 
@@ -63,20 +63,20 @@ Redundant行格式是在MySQL5.0版本之前的行记录存储格式。
 
 Compact行记录是在MySQL5.0版本引入的。
 
-<table border="none">
+<table style={{border:'none'}}>
     <tbody>
-        <td style="background:red;color:white;">变长字段长度列表</td>
-        <td style="background:blue;color:white;">NULL标识位</td>
-        <td style="background:green;color:white;">记录头信息</td>
-        <td style="background:gray;color:white;">row_id</td>
-        <td style="background:gray;color:white;">trx_id</td>
-        <td style="background:gray;color:white;">roll_ptr</td>
-        <td style="background:pink;color:white;">不为NULL值的列值</td>
+        <td style={{ background:'red', color:'white'}}>变长字段长度列表</td>
+        <td style={{ background:'blue', color:'white'}}>NULL标识位</td>
+        <td style={{ background:'green', color:'white'}}>记录头信息</td>
+        <td style={{ background:'gray', color:'white'}}>row_id</td>
+        <td style={{ background:'gray', color:'white'}}>trx_id</td>
+        <td style={{ background:'gray', color:'white'}}>roll_ptr</td>
+        <td style={{ background:'pink', color:'white'}}>不为NULL值的列值</td>
     </tbody>
 </table>
 
-* 变长字段长度列表（1-n字节）：只包含变长字段长度，存储每个变长列的长度。变长字段指的是VARCHAR类型的列。当列长度小于255字节，用1个字节表示，大于255字节，使用2个字节表示。列长度顺序逆序放置。
-* NULL标识位（1-n字节）：为NULL则置bit位为1，否则为0。
+* 变长字段长度列表（1-n字节）：只包含变长字段长度，逆序存储每个变长列的长度。变长字段指的是VARCHAR类型的列。当列长度小于255字节，用1个字节表示，大于255字节，使用2个字节表示。列长度顺序逆序放置。
+* NULL标识位（1-n字节）：为NULL则置bit位为1，否则为0。存储顺序也是逆序。
 * 记录头信息（5字节）：记录行的一些特征信息。
 * row_id（6字节）：如果表没有定义主键时存在，否则不存在。
 * trx_id（6字节）：事务ID。
@@ -91,21 +91,33 @@ Compact行记录是在MySQL5.0版本引入的。
 | min_rec_flag | 1 | 该记录是否预先被定义为最小记录 |
 | n_owned | 4 | 该记录拥有的记录数 |
 | heap_no | 13 | 索引堆中该记录的排序记录 |
-| record_type| 3 | 记录类型，000表示普通，001表示B+树节点指针，010表示Infimum，011表示Supermum，1xx表示保留 |
+| record_type| 3 | 记录类型，000表示普通，001表示B+树节点指针，010表示Infimum最小记录，011表示Supermum最大记录，1xx表示保留 |
 | next_record | 16 | 页中下一条记录的相对位置 |
 
 该格式下，VARCHAR类型和CHAR类型的列值都不会额外占用空间。
 
+:::tip 为什么「变长字段长度列表」的信息要逆序存放？
+变长字段的数据占用字节数之所以会按列的顺序**逆序存放**，是因为，一方面记录头信息中指向下一记录的指针指向的是记录头信息和真实数据之前的位置，好处是向左读就是记录头的信息，向右读就是真实数据，比较方便；另一方面是提高CPU Cache的命中率，位置靠前的记录真实数据和其对应的长度信息可以更高概率地放在一个Cache Line中。
+:::
+
+:::tip 「NULL值列表」是必须的吗？
+
+当数据表的字段都定义为 `NOT NULL` 的时候，行格式中便不会有NULL值列表了。
+:::
 
 ### 行溢出数据处理
 
-MySQL提供VARCHAR类型列最多可以存储65535个字节，VARCHAR(n)中的n指的是字符个数，而非字节个数。另外因为有一些额外占用，实际并不是65535字节，而是65532字节，并且是指表中所有VARCHAR列的字节长度总和不超过65535字节。
+:::tip 一行记录的最大长度是65535个字节，那么VARCHAR类型的列最大长度是多少？
+MySQL提供VARCHAR类型列最多可以存储**65535个字节**，VARCHAR(n)中的**n指的是字符个数，而非字节个数**。另外因为有一些额外占用，实际并不是65535字节，而是65532字节，并且是指表中**所有VARCHAR列的字节长度总和不超过65535字节**。在计算长度时需要包含变长字段长度列表、NULL标志位信息一起计算，总体不能超过65535个字节！
+:::
+
+当发生行溢出时，会采用溢出页的方式进行存储，当前行保留指向溢出页数据位置的20字节的指针信息。
 
 对于VARCHAR类型的数据，行存储时采用如下策略：行内最多只保存前 `prefix_len` 个字节的前缀，如果长度溢出则剩下的存储到BLOB页，并在行内保存一个指针。经过测试，当阈值长度为 `8098` 时，会把 `prefix_len=768` 的前缀放到行内。
 
 ### Compressed 和 Dynamic 行格式
 
-InnoDB 1.0.x版本引入了Dynamic 和 Compressed 两种新的行记录格式。这两种新的记录格式会把存放到BLOB中的数据采用 `prefix_len=0` 的策略，也就是只存放20个字节的指针，数据完全存放到Off Page中。另外，Compressed 格式会对BLOB、TEXT、VARCHAR类型的列数据使用zlib算法进行压缩。
+InnoDB 1.0.x版本引入了Dynamic 和 Compressed 两种新的行记录格式。这两种新的记录格式会把存放到BLOB中的数据采用 `prefix_len=0` 的策略，也就是只存放20个字节的指针，**数据完全存放到Off Page中**。另外，Compressed 格式会对BLOB、TEXT、VARCHAR类型的列数据使用zlib算法进行压缩。
 
 ### CHAR列类型存储方式
 
@@ -113,7 +125,7 @@ InnoDB 1.0.x版本引入了Dynamic 和 Compressed 两种新的行记录格式。
 
 ## 数据页结构
 
-![InnoDB存储引擎数据页结构](../../../../static/images/database/mysql/innodb_data_page_structure.png)
+![InnoDB存储引擎数据页结构](../../../static/images/database/mysql/innodb_data_page_structure.png)
 
 ### 文件头（File Header）
 
@@ -173,7 +185,7 @@ Page Header 用来记录数据页的状态信息，由 14 个部分组成，共�
 
 这里需要提到行记录中的 next_record。它表示从当前记录的真实数据到下一条记录的真实数据的地址（即记录头信息和列数据的中间位置）偏移量。比如第一条记录的 next_record 为 32，那么就表示从第一条记录的真实数据的地址处向后找 32 个字节就是下一条记录的真实数据地址。同时需要注意的是，下一条记录并不是按照插入顺序，而是按照主键值由小到大的顺序，Infimum 记录的下一条就是本页中主键值最小的用户记录，而本页中主键值最大的用户记录的下一条就是 Supremum 记录。
 
-![InnoDB存储引擎Infimum和Supermum示例图](../../../../static/images/database/mysql/innodb_infimum_supermum_example.png)
+![InnoDB存储引擎Infimum和Supermum示例图](../../../static/images/database/mysql/innodb_infimum_supermum_example.png)
 
 ### 用户记录和空闲空间
 
@@ -185,13 +197,13 @@ User Records 就是实际存储行记录的部分，Free Space 指的是空闲�
 
 他们将页中所有的记录（包括最大和最小记录，但不包括标记为已删除的记录）划分为几个组。每个组的最后一条记录，也就是组内最大的那条记录的头信息中的 n_owned 属性表示组内一共有几条记录。最后将每个组的最后一条记录的地址偏移量（页面从 0 开始数，到该记录时的字节数）单独提取出来按照顺序存储到页目录中，页目录中的这些地址偏移量也被称为槽（Slot）。
 
-![](../../../../static/images/database/mysql/innodb_page_dir_slot1.png)
+![](../../../static/images/database/mysql/innodb_page_dir_slot1.png)
 
 在这个页目录中有两个槽，0 号槽的值为 99，代表最小记录的地址偏移量，1 号槽的值为 112，代表最大记录的地址偏移量。在最小记录的头信息中，n_owned 的值为 1，表示该分组中只有 1 条记录，也就是最小记录本身。最大记录的头信息中，n_owned 的值为 5，表示该分组中有 5 条记录。
 
 InnoDB 中规定，对于最小记录所在的分组只能有 1 条记录，对于最大记录所在的分组拥有的记录数只能在 1 到 8 条之间，剩下的分组中记录的条数只能在 4 到 8 条之间。即在初始情况下，数据页中只有最小和最大两条记录，它们分为两个组。之后每插入一条记录，都会从页目录中找到主键值比插入记录的主键值大且差值最小的槽（确定该记录应该处于哪个分组中），然后把该槽对应记录的 n_owned 值加 1，直到该组中的记录数等于 8 个。接下来再插入记录时，会将最大记录所在的组拆分成两个，新分离出来的组中有 4 条记录，最大记录所在的组中有 5 条记录。接着上面的例子，我们再插入多条数据。
 
-![](../../../../static/images/database/mysql/innodb_page_dir_slot2.png)
+![](../../../static/images/database/mysql/innodb_page_dir_slot2.png)
 
 接下来我们再看一开始提出的问题，在页中查找指定主键值对应的记录。由于各个槽对应的记录的主键值都是按照从小到大的顺序排列的，因此我们可以用二分法进行快速查找。有 0 到 4 共五个槽，初始情况下最小的槽 low = 0，最大的槽 high = 4，假设需要查找的主键值为 6。那么首先计算中间槽的位置：(0 + 4) / 2 = 2，查看 2 号槽中对应的主键值为 8，而 6 又小于 8，所以设置 high = 2，low 保持不变。然后重新计算中间槽的位置为 1，查看槽位对应的主键值为 4，所以设置 low = 1，high 保持不变。由于此时 high 与 low 的差值为 1，所以可以确定主键值为 6 的记录在 2 号槽对应的分组中。此时可以从 1 号槽最大的记录向后查找，该条记录的下一条就是 2 号槽的最小记录，直到找到为止。
 

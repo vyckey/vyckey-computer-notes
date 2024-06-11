@@ -232,4 +232,4 @@ public class BeanLifeCycleTest {
 # 参考资料
 
 * [SegmentFault - 一文读懂 Spring Bean 的生命周期](https://segmentfault.com/a/1190000040365130)
-* 
+* [Java全栈知识体系 - Spring IOC实现原理详解之Bean实例化](https://pdai.tech/md/spring/spring-x-framework-ioc-source-3.html)

@@ -5,7 +5,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
 const config: Config = {
-  title: 'My Site',
+  title: 'Vyckey Computer Notes',
   tagline: 'Programmer are cool ~',
   favicon: 'img/favicon.ico',
 
@@ -61,13 +61,21 @@ const config: Config = {
         id: 'java',
         path: 'java',
         routeBasePath: 'java',
-        // editUrl: ({locale, versionDocsDirPath, docPath}) => {
-        //   if (locale !== defaultLocale) {
-        //     return `https://crowdin.com/project/docusaurus-v2/${locale}`;
-        //   }
-        //   return `https://github.com/facebook/docusaurus/edit/main/website/${versionDocsDirPath}/${docPath}`;
-        // },
-        // remarkPlugins: [npm2yarn],
+        editCurrentVersion: true,
+        sidebarPath: require.resolve('./sidebars.js'),
+        showLastUpdateAuthor: true,
+        showLastUpdateTime: true,
+        remarkPlugins: [remarkMath],
+        rehypePlugins: [rehypeKatex],
+      }),
+    ],
+    [
+      'content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'database',
+        path: 'database',
+        routeBasePath: 'database',
         editCurrentVersion: true,
         sidebarPath: require.resolve('./sidebars.js'),
         showLastUpdateAuthor: true,
@@ -121,6 +129,7 @@ const config: Config = {
           position: 'left',
           label: 'Computer',
         },
+        {to: '/database', label: 'Database', position: 'left'},
         {to: '/java', label: 'Java Notes', position: 'left'},
         {to: '/ai', label: 'AI Notes', position: 'left'},
         {to: '/blog', label: 'Blog', position: 'left'},
@@ -135,7 +144,7 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Notes',
           items: [
             {
               label: 'Java',
@@ -148,11 +157,15 @@ const config: Config = {
           ],
         },
         {
-          title: 'Community',
+          title: 'E-mail',
           items: [
             {
-              label: 'Wechat',
-              href: 'https://wechat.com/vyckey',
+              label: 'Google E-mail',
+              href: 'mailto:vyckeyolyland@gmail.com',
+            },
+            {
+              label: 'QQ E-mail',
+              href: 'mailto:vyckey@qq.com',
             },
           ],
         },
@@ -160,12 +173,12 @@ const config: Config = {
           title: 'More',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
               label: 'GitHub',
               href: 'https://github.com/vyckey/vyckey-computer-notes',
+            },
+            {
+              label: 'Blog',
+              to: '/blog',
             },
           ],
         },
