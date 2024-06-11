@@ -9,7 +9,7 @@ sidebar_position: 1
 
 ## 快速排序
 
-```java
+```java title="QuickSort.java" showLineNumbers
 public class QuickSort {
     public static void main(String[] args) {
         int[] arr = new int[]{4, 3, 2, 4, 5, 4, 7, 1, 2, 8, 0};

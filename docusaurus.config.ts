@@ -174,11 +174,39 @@ const config: Config = {
           position: 'left',
           label: 'Computer',
         },
-        {to: '/database', label: 'Database', position: 'left'},
+        { 
+          type: 'dropdown',
+          label: 'Database',
+          position: 'left',
+          to: '/database',
+          items: [
+            {label: 'MySQL', to: '/database/mysql'},
+            {label: 'Redis', to: '/database/redis'},
+            {label: 'ES', to: '/database/elasticsearch'}
+          ]
+        },
         {to: '/java', label: 'Java', position: 'left'},
-        {to: '/middleware', label: 'Middleware', position: 'left'},
+        { 
+          type: 'dropdown',
+          label: 'Middleware',
+          position: 'left',
+          to: '/middleware',
+          items: [
+            {label: 'Dubbo', to: '/middleware/rpc/dubbo'},
+            {label: 'Kafka', to: '/middleware/mq/kafka'},
+          ]
+        },
         {to: '/bigdata', label: 'Bigdata', position: 'left'},
-        {to: '/ai', label: 'AI', position: 'left'},
+        { 
+          type: 'dropdown',
+          label: 'AI',
+          position: 'left',
+          to: '/ai',
+          items: [
+            {label: 'Transformer', to: '/ai/deeplearning/transformer'},
+            {label: 'Models', to: '/ai/deeplearning/models'},
+          ]
+        },
         {to: '/frontend', label: 'Frontend', position: 'left'},
         {to: '/blog', label: 'Blog', position: 'left'},
         {
@@ -187,6 +215,16 @@ const config: Config = {
           position: 'right',
         },
       ],
+    },
+    docs: {
+      sidebar: {
+        hideable: true,
+        autoCollapseCategories: true,
+      }
+    },
+    tableOfContents: {
+      minHeadingLevel: 2,
+      maxHeadingLevel: 6
     },
     footer: {
       style: 'dark',
@@ -236,6 +274,7 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: ['java', 'python']
     },
   } satisfies Preset.ThemeConfig,
 };
