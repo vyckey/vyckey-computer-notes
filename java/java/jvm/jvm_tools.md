@@ -1,13 +1,15 @@
 ---
 title: Java JVM Tools
 tags: [java, jvm, tools]
-sidebar_label: Tools
-sidebar_position: 3
+sidebar_label: Analysis Tools
+sidebar_position: 20
 ---
 
 [toc]
 
-# Alibaba Arthas
+# Java JVM Tools
+
+## Alibaba Arthas
 
 Arthas 是Alibaba开源的Java诊断工具，深受开发者喜爱。
 

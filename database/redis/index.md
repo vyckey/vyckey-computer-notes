@@ -15,7 +15,7 @@ Redis是一个开源（BSD许可）的内存中数据结构存储，用作数据
 
 Redis命令大全可到 [Redis官网命令](https://redis.io/commands/?group=string) 中进行搜索。
 
-# 参考资料
+## 参考资料
 
 * [Redis官网](https://redis.io/)
 * [Redis官网 - Docs](https://redis.io/docs/get-started/)

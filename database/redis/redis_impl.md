@@ -922,7 +922,7 @@ typedef struct redisClient {
 }
 ```
 
-# 参考资料
+## 参考资料
 
 * 《Redis设计与实现》
 * [readthedocs.io - redisbook](https://redisbook.readthedocs.io/en/latest)
