@@ -1,3 +1,9 @@
+---
+title: Spring Configuration
+tags: [java, spring, configuration]
+sidebar_label: Spring Configuration
+sidebar_position: 50
+---
 
 # 多环境配置
 
@@ -77,4 +83,4 @@ public class ProfileTest {
 
 @PropertySource
 
-# 参考资料
+## 参考资料

@@ -9,6 +9,6 @@ sidebar_position: 10
 
 
 
-# 参考资料
+## 参考资料
 
 * [CSDN - 死磕Spring之IoC篇 - @Bean 等注解的实现原理](https://www.cnblogs.com/lifullmoon/p/14461712.html)

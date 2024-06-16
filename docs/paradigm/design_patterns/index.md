@@ -6,3 +6,6 @@ sidebar_position: 1
 ---
 
 # Design Patterns
+
+## 参考资料
+

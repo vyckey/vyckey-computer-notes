@@ -11,7 +11,7 @@ sidebar_position: 2
 
 对于不同作用域的 `Bean` ，底层都会调用 `AbstractAutowireCapableBeanFactory#createBean(...)` 方法进行创建，创建 `Bean` 的过程涉及到 `Bean` 生命周期的大部分阶段，例如**实例化阶段**、**属性赋值阶段**、**`Aware` 接口回调阶段**、**初始化阶段**都是在这个方法中完成的，这个核心方法将在本文进行详细分析。
 
-# AbstractAutowireCapableBeanFactory
+## AbstractAutowireCapableBeanFactory
 
 ```mermaid
 classDiagram
@@ -36,7 +36,7 @@ AbstractBeanFactory <|.. AbstractAutowireCapableBeanFactory
 
 `AbstractAutowireCapableBeanFactory` 抽象类中有一个核心的方法 `createBean` 用于完成 `Bean` 的创建。
 
-## createBean 方法
+### createBean 方法
 
 `createBean(String beanName, RootBeanDefinition mbd, @Nullable Object[] args)` 方法用于创建 `Bean`，方法如下：
 
@@ -118,7 +118,7 @@ protected Object createBean(String beanName, RootBeanDefinition mbd, @Nullable O
 
 可以看到这个方法中并没有开始真正 `Bean` 的创建，在这个方法的第 `4` 步会调用 `doCreateBean(...)` 方法创建 `Bean` 。
 
-## doCreateBean 方法
+### doCreateBean 方法
 
 `doCreateBean(final String beanName, final RootBeanDefinition mbd, final @Nullable Object[] args)`，创建 `Bean`，方法如下：
 
@@ -310,7 +310,7 @@ protected Object doCreateBean(final String beanName, final RootBeanDefinition mb
 
 关于上面创建 `Bean` 的两个方法的相关步骤没有展开讨论，下面会依次进行分析。
 
-## 1. 创建 Class 对象
+### 1. 创建 Class 对象
 
 对应代码段：
 ```java
@@ -326,7 +326,7 @@ if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != nu
 ```
 创建一个 Java 对象之前，需要确保存在对应的 Class 对象。如果这里获取到了 Class 对象，但是 `mbd` 中没有 Class 对象的相关信息，表示这个 Class 对象是动态解析出来的，则需要复制一份 `mbd`，并设置 Class 对象，因为动态解析出来的 Class 对象不被共享
 
-### resolveBeanClass 方法
+#### resolveBeanClass 方法
 
 `resolveBeanClass(final RootBeanDefinition mbd, String beanName, final Class<?>... typesToMatch)`，获取 `beanName` 的 Class 对象，方法如下：
 
@@ -353,7 +353,7 @@ protected Class<?> resolveBeanClass(final RootBeanDefinition mbd, String beanNam
 ```
 如果有 Class 对象则直接返回，没有的话调用 `doResolveBeanClass(...)` 方法去获取 Class 对象。
 
-### doResolveBeanClass 方法
+#### doResolveBeanClass 方法
 
 ```java
 // AbstractBeanFactory.java
@@ -426,7 +426,7 @@ private Class<?> doResolveBeanClass(RootBeanDefinition mbd, Class<?>... typesToM
 
 注意，这个过程可能是动态解析出来的，例如 `className` 是一个表达式，通过 `BeanDefinition` 表达式解析器解析出来的，然后根据其获取 Class 对象，这里是不会设置到 `RootBeanDefinition` 中。
 
-## 2. MethodOverride 的验证与准备
+### 2. MethodOverride 的验证与准备
 
 对应代码段：
 
@@ -467,7 +467,7 @@ protected void prepareMethodOverride(MethodOverride mo) throws BeanDefinitionVal
 
 确保这个类中存在对应的方法，并设置为不能重复加载。
 
-## 3. 实例化前阶段
+### 3. 实例化前阶段
 
 对应代码段：
 
@@ -493,7 +493,7 @@ try {
 
 注意，如果这里返回对象不是 `null` 的话，不会继续往下执行原本初始化操作，直接返回，也就是说这个方法返回的是最终实例对象。可以通过这种方式提前返回一个代理对象，例如 AOP 的实现，或者 RPC 远程调用的实现（因为本地类没有远程能力，可以通过这种方式进行拦截）。
 
-### resolveBeforeInstantiation 方法
+#### resolveBeforeInstantiation 方法
 
 ```java
 // AbstractAutowireCapableBeanFactory.java
@@ -567,7 +567,7 @@ public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, St
 
 遍历所有的 `BeanPostProcessor` 处理器，执行 `postProcessAfterInitialization` 方法，初始化后置处理。
 
-## 4. Bean 的实例化
+### 4. Bean 的实例化
 
 对应代码段：
 
@@ -612,7 +612,7 @@ if (beanType != NullBean.class) {
 3. 获取包装的实例对象 `bean` 。
 4. 获取包装的实例对象的类型 `beanType` 。
 
-### createBeanInstance 方法
+#### createBeanInstance 方法
 
 `createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args)` 方法，创建一个 `Bean` 的实例对象，如下：
 
@@ -735,7 +735,7 @@ protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd
 4. 找到最匹配的一个构造方法，并找到对应的入参（构造器注入），通过调用该方法返回一个实例对象。
 5. 兜底方法，调用默认构造方法创建一个实例对象。
 
-## 5. 对 RootBeanDefinition 加工处理
+### 5. 对 RootBeanDefinition 加工处理
 
 对应代码段：
 
@@ -789,7 +789,7 @@ protected void applyMergedBeanDefinitionPostProcessors(RootBeanDefinition mbd, C
 
 这个过程在后续讲通过 `@Autowired` 依赖注入的实现原理会被提到。
 
-## 6. 提前暴露当前 Bean
+### 6. 提前暴露当前 Bean
 
 对应代码段：
 
@@ -866,7 +866,7 @@ protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFa
  `Bean` 出现循环依赖注入，可以通过这个 `ObjectFactory` 实现类获取到提前暴露的对象避免此类问题。
 
 
-## 7. 属性填充
+### 7. 属性填充
 
 对应代码段：
 ```java
@@ -893,7 +893,7 @@ catch (Throwable ex) {
 
 在创建好实例对象后，这个对象的属性还没有赋值，所以将这个实例对象的相关属性进行赋值，也就是上面的第 `<4>` 步
 
-### populateBean 方法
+#### populateBean 方法
 
 `populateBean(String beanName, RootBeanDefinition mbd, @Nullable BeanWrapper bw)` 方法，属性填充，如下：
 
@@ -1050,7 +1050,7 @@ protected void populateBean(String beanName, RootBeanDefinition mbd, @Nullable B
 * 允许你对属性值进行后置处理，例如 `@Autowired`、`@Value` 等注解标注的属性会通过这里找到对应的属性值（或对象）。
 * 上述过程仅找到了属性值，还没设置到当前实例对象中，所以最后一步才是真正的属性填充。
 
-## 8. 初始化 Bean
+### 8. 初始化 Bean
 
 对应代码段：
 
@@ -1075,7 +1075,7 @@ try {
 ```
 实例对象已经有了，且相关属性已经填充了，那么接下来需要进行相关初始化工作，也就是上面的第 `<5>` 步
 
-### initializeBean
+#### initializeBean
 
 ```java
 // AbstractAutowireCapableBeanFactory.java
@@ -1252,7 +1252,7 @@ public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, St
 * `InitializingBean#afterPropertiesSet` 方法的回调。
 * `init-method` 初始化方法的调用。
 
-## 9. 循环依赖注入的检查
+### 9. 循环依赖注入的检查
 
 对应代码段：
 
@@ -1307,7 +1307,7 @@ if (earlySingletonExposure) {
 
 当出现循环依赖注入，这里会检查填充属性和初始化的过程中是否改变了这个 `beanName`，改变了的话需要判断依赖当前 `beanName` 的 `Bean` 们是否已经创建了，如果已经创建了，那么可能它拿到的 `beanName` 不是这里初始化后的对象（被修改了），所以需要抛出异常。
 
-## 10. 注册可销毁的 Bean
+### 10. 注册可销毁的 Bean
 
 对应代码段：
 
@@ -1360,11 +1360,11 @@ protected void registerDisposableBeanIfNecessary(String beanName, Object bean, R
 * 单例模式：保存在 `disposableBeans` `Map` 集合中。
 * 其他模式：往 `Scope` 对象里面注册。
 
-## 11. 返回 Bean
+### 11. 返回 Bean
 
 经过上面一系列的过程，实例化、属性填充、初始化等阶段，已经创建好了这个 `Bean`，最后直接返回。
 
-# 总结
+## 总结
 
 当我们显示或者隐式地调用 `AbstractBeanFactory` 的 `getBean(...)` 方法时，会触发 `Bean` 的加载。对于不同作用域的 `Bean`，底层都会调用 `AbstractAutowireCapableBeanFactory` 的 `createBean(...)` 方法进行创建，创建 `Bean` 的过程如下：
 1. Class 对象加载阶段。
@@ -1380,6 +1380,6 @@ protected void registerDisposableBeanIfNecessary(String beanName, Object bean, R
 
 创建 `Bean` 的过程非常复杂，在不同的阶段都会讲到 `BeanPostProcessor`（及其子类）的身影，Spring 内部很多功能都是基于该处理器接口实现的，当然开发者也可以通过其进行拓展，使得框架变得非常灵活。其中 `Bean` 的实例化和属性填充两个阶段比较复杂，这里没有深入分析，可参考后续文章。提前暴露单例 `Bean` 循环依赖处理的关键，后续文章也会再次分析。
 
-# 参考资料
+## 参考资料
 
 * [CSDN - 死磕Spring之IoC篇 - Bean 的创建过程](https://www.cnblogs.com/lifullmoon/p/14452842.html)

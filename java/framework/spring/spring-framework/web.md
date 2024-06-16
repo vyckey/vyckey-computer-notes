@@ -1,11 +1,13 @@
 ---
-title: Web
+title: Spring Web
 tags: [java, spring, web]
-sidebar_label: Web
-sidebar_position: 1
+sidebar_label: Spring Web
+sidebar_position: 20
 ---
 
-# 网络处理相关注解
+# Spring Web
+
+## 网络处理相关注解
 
 ```java
 @Slf4j
@@ -56,7 +58,7 @@ public class GoodsController {
 }
 ```
 
-## @Controller 和 @RestController
+### @Controller 和 @RestController
 
 被注解的类表示是一个web controller，可以接收和处理HTTP请求。
 
@@ -65,7 +67,7 @@ public class GoodsController {
 * `@RestController`无法返回指定页面，而`@Controller`可以。
 * `@Controller`中的方法要返回JSON、XML等格式的数据，需要补充`@ResponseBody`注解，而`@RestController`则不需要。
 
-## @RequestMapping 和 @XxxMapping
+### @RequestMapping 和 @XxxMapping
 
 `@RequestMapping` 注解用于将网络请求的地址映射到控制器`Controller`的方法处理器上。`@RequestMapping`只能注解到类和方法上，类注解用于定义控制器中所有方法的公共属性。例如，上面的`goods/v1`和`/{goods_id}`共同组成了URI，`goods/v1`是公共前缀。
 
@@ -80,13 +82,13 @@ public class GoodsController {
 
 除此之外，Spring提供了 `@GetMapping` , `@PostMapping` ， `@PutMapping` , `@DeleteMapping` , `@PatchMapping` 等注解用于简化 `@RequestMapping` 的配置，区别点只是在于指定了HTTP请求的方法。
 
-## @RequestVariable 和 @RequestParam
+### @RequestVariable 和 @RequestParam
 
 `@RequestVariable` 用于把方法中的参数和HTTP请求中的URI路径子串进行绑定。
 
 `@RequestParam` 用于把方法中的参数和HTTP请求中的URI参数进行绑定。
 
-## @RequestBody 和 @ResponseBody
+### @RequestBody 和 @ResponseBody
 
 `@RequestBody` 注解用于把方法参数和HTTP请求体的数据进行绑定，并依赖 `HttpMessageConverter` 接口实现对数据进行转换。一般来说，可以和 `@Valid` 注解一同使用，来校验请求类的数据。
 
@@ -116,7 +118,7 @@ public void requestHeaderTest(
 }
 ```
 
-## @ControllerAdvice
+### @ControllerAdvice
 
 对声明 `@ExceptionHandler` 、`@InitBinder` 或 `@ModelAttribute` 方法的类进行 `@Component` 的特化，以在多个 `@Controller` 类之间共享。
 
@@ -182,4 +184,5 @@ public class ApiControllerAdvice {
 }
 ```
 
-# 参考资料
+## 参考资料
+

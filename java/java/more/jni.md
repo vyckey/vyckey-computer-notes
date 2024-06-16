@@ -5,7 +5,9 @@ sidebar_label: JNI
 sidebar_position: 6
 ---
 
-# 参考资料
+# JNI
+
+## 参考资料
 
 * [Oracle Java8 JNI Docs](https://docs.oracle.com/javase/8/docs/technotes/guides/jni/)
 * [掘金 - JNI教程与技术手册](https://juejin.cn/post/6844904001931083789)

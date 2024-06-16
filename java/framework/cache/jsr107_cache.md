@@ -15,7 +15,7 @@ JCache规范定义了一种对Java对象临时在内存中进行缓存的方法�
 * 支持按值或者引用来缓存数据
 * 支持注解来实现缓存功能
 
-# Jcache
+## Jcache
 
 JavaCache(简称JCache)定义了Java标准的api。
 
@@ -32,7 +32,7 @@ compile group: 'org.jsr107.ri', name: 'cache-ri-impl', version: '1.1.1'
 |   `Cache.Entry` |	`Cache` 接口的内部接口，真正的存储实体 |
 |   `ExporyPolicy`    |	控制缓存的过期时间  |
 
-## CacheProvider
+### CacheProvider
 
 这个接口的实现类提供创建和管理 `CacheManager` 生命周期的方法。
 `Caching` 类时javax提供的一个工具类，为了方便开发者去获取合适的 `CachingProvider` 实例的（该接口的实现类是管理 `CacheManager` 的生命周期）。
@@ -41,7 +41,7 @@ compile group: 'org.jsr107.ri', name: 'cache-ri-impl', version: '1.1.1'
 2. 根据 `ClassLoader` 获取 `CachingProvider` 
 3. 根据全类名创建/获取开发者实现的实例
 
-## CacheManager
+### CacheManager
 
 代码示例
 ```java
@@ -65,6 +65,6 @@ public class JCacheTest {
 }
 ```
 
-# 参考资料
+## 参考资料
 
 * [简书 - 《剖析缓存系列》—— 熟悉JSR-107 JAVA缓存规范](https://www.jianshu.com/p/f6a1eae03efb)

@@ -5,9 +5,15 @@ sidebar_label: Time
 sidebar_position: 1
 ---
 
-# 第一代时间类库
+# 时间/日期
 
-## java.util.Date
+## 常用转换
+
+
+
+## 第一代时间类库
+
+### java.util.Date
 
 `java.util.Date` 不能直接表示日期，以毫秒的精度表示时间。年份的起始年为1900年，月份起始年为0，如下例子，2023年用123表示，12月用11表示。时间的默认时区是JVM默认的CST。
 
@@ -45,7 +51,7 @@ public class Date {
 }
 ```
 
-## java.sql.Date
+### java.sql.Date
 
 `java.sql.Date` 继承了 `java.util.Date` 类，并重写了构造方法，把时分秒毫秒等全部设置为0，精度只能表示到天，所以一般来说**基本不用该类**。
 
@@ -74,9 +80,9 @@ public class Date extends java.util.Date {
     }
 ```
 
-# 第二代时间类库
+## 第二代时间类库
 
-## java.util.Calendar
+### java.util.Calendar
 
 `java.util.Calendar` 类中的年和月可以直接表示，不像 `java.util.Date` 那样需要减去1900年和1个月。同时该类是一个可修改的类，并不是一个稳定的时间。此时的JDK保留了 `java.util.Date` 和 `java.util.Calendar` 两个类，只用一个类有时候功能是残缺的。
 
@@ -96,7 +102,7 @@ System.out.println("我改时间了：");
 System.out.println(dateFormat.format(time2));
 ```
 
-## java.text.DateFormat
+### java.text.DateFormat
 
 `DateFormat` 是时间格式化的抽象类，我们经常使用它的子类 `SimpleDateFormat` 来格式化和解析日期与时间。但是它也有一个臭名昭著的问题，非线程安全的，多线程如果尝试使用同一个formatter解析日期，可能会得到无法预期的结果。
 
@@ -123,7 +129,7 @@ for (int i = 0; i < 5; i++) {
 *  `Date` 和 `Calendar` 的时间可变，会造成很大的安全隐患。
 *  `DateFormat` 线程不安全，多线程场景需要手动加锁解决。
 
-# 第三代时间类库
+## 第三代时间类库
 
 前面两代的时间类库的缺陷导致了很多用户转向了第三方类库，比如Joda-Time等。所以在java 8开始在 `java.time` 包下增加了很多新类，优化了这些缺陷，并增加了一些新的功能。
 
@@ -140,7 +146,7 @@ java 8中常见的日期时间类有：
 * ZoneId/ZoneOff：表示时区。
 * TemporalAdjuster：支持调整日期。
 
-## LocalDate
+### LocalDate
 
 该类表示的是不可修改的日期，精度到天，不包含时间和时区信息。
 
@@ -229,7 +235,7 @@ localDate1.lengthOfMonth();// 28天
 localDate1.lengthOfYear();// 365天
 ```
 
-## LocalTime
+### LocalTime
 
 该类表示的是时间，精度到纳秒，不包含日期和时区信息。
 
@@ -244,7 +250,7 @@ int nano = localTime.getNano();//0
 int minuteOfHour = localTime.get(ChronoField.MINUTE_OF_HOUR);//59
 ```
 
-## LocalDateTime
+### LocalDateTime
 
 该类的功能是 `LocalDate` 和 `LocalTime` 的合并。
 
@@ -260,7 +266,7 @@ LocalDate date2 = dateTime4.toLocalDate();
 LocalTime time2 = dateTime4.toLocalTime();
 ```
 
-## Instant
+### Instant
 
 该类是java 8补充的表示时间戳的类，不同于 `System.currentTimeMillis()` 获取到的是纳秒。以Unix元年时间，也就是1970年1月1日0点开始所经历的时间。
 
@@ -290,7 +296,7 @@ LocalDateTime localDateTime = LocalDateTime.ofInstant(instant4, ZoneId.systemDef
 
 Instant的设计初衷是为了便于机器使用。它包含的是由秒及纳秒所构成的数字。所以，它无法处理那些我们非常容易理解的时间单位。
 
-## Period和Duration
+### Period 和 Duration
 
 * `Period` ：用于计算日期的间隔，对应使用 `LocalDate` ，它们的作用范围域都是日期(年/月/日)。
 *  `Duration` ：用于计算时间的间隔，对应使用 `Instant`、`LocalTime`、`LocalDateTime`，它们的作用范围域都是时间(天/时/分/秒/毫秒/纳秒)。
@@ -367,7 +373,7 @@ Instant today = Instant.ofEpochMilli(todayTimeMillis);
 Duration duration = Duration.between(yesterday, today);//天数 = 1
 ```
 
-## TemporalAdjuster
+### TemporalAdjuster
 
 `TemporalAdjuster` 类是调整 `Temporal` 对象的策略。 `LocalDate` 和 `LocalTime` 等都是 `Temporal` 的实现类。
 
@@ -386,7 +392,7 @@ now.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));//获取上周一
 now.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));//获取下周日
 ```
 
-## 时间格式化
+### 时间格式化
 
 Java 8 的 `java.time.format` 包中提供了 `DateTimeFormatter` 和 `DateTimeFormatterBuilder` 来以不同的方式格式化日期、时间或两者。
 
@@ -420,7 +426,7 @@ LocalDateTime dateTime  = LocalDateTime.now();
 String str =  dateTime.format(formatter);// 今天是:2022年,12月,11日,周7
 ```
 
-## 时区
+### 时区
 
 之前的日期和时间都不包含时区信息。时区的处理是新版日期和时间API新增的重要功能，使用新版日期和时间API时区的处理被极大地简化。
 
@@ -431,7 +437,7 @@ String str =  dateTime.format(formatter);// 今天是:2022年,12月,11日,周7
 ZoneId zoneId = ZoneId.of("Asia/Shanghai");
 ```
 
-地区ID都为{区域}/{城市}的格式，这些地区集合的设定都由英特网编号分配机构（IANA）的时区数据库提供。你可以通过Java 8的新方法 `toZoneId` 将一个老的时区对象转换为 `ZoneId` 。
+地区ID都为\{区域\}/\{城市\}的格式，这些地区集合的设定都由英特网编号分配机构（IANA）的时区数据库提供。你可以通过Java 8的新方法 `toZoneId` 将一个老的时区对象转换为 `ZoneId` 。
 
 ```java
 // 通过TimeZone的toZoneId转换为新的时区对象
@@ -456,7 +462,7 @@ Instant instant=Instant.now();
 ZonedDateTime zdt3=instant.atZone(zoneId);
 ```
 
-# 总结
+## 总结
 
 * Java 8之前老版的 `java.util.Date` 类以及其他用于日期时间的类在设计上有缺陷，比如可变性，尴尬的起始时间，默认值和包名。
 * 新版的日期和时间API中，日期-时间对象是不可变的。
@@ -465,6 +471,6 @@ ZonedDateTime zdt3=instant.atZone(zoneId);
 * 使用 `TemporalAdjuster` 可以更精细的方式操纵日期，不再局限于一次只能改变它的一个值，并且你还可按照需求定义自己的日期转换器。
 * 格式化时间也变得线程安全，而且可以根据自己的意愿自定义格式化风格。
 
-# 参考资料
+## 参考资料
 
 * [51CTO - Java8全新日期、时间API在这全明白了](https://www.51cto.com/article/744423.html)
