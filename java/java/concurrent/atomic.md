@@ -5,6 +5,8 @@ sidebar_label: Atomic
 sidebar_position: 1
 ---
 
+# 原子
+
 `Atomic` 是原子的意思，在计算机中，表示是一个不可中断的特性。
 
 Java 中并发包`java.util.concurrent`的原子类都存放在`java.util.concurrent.atomic`包。根据操作的数据类型，可分为四类：
@@ -14,9 +16,9 @@ Java 中并发包`java.util.concurrent`的原子类都存放在`java.util.concur
 3. 引用类型：`AtomicReference`，引用类型原子类；`AtomicMarkableReference`，原子更新带有标记的引用类型；`AtomicStampedReference`，原子更新带有版本号的引用类型。该类将整数值与引用关联起来，可用于解决原子的更新数据和数据的版本号，可以解决使用 CAS 进行原子更新时可能出现的 ABA 问题。
 4. 对象属性修改类型：`AtomicIntegerFieldUpdater`，`AtomicLongFieldUpdater`，`AtomicReferenceFieldUpdater`。
 
-# 四类原子类
+## 四类原子类
 
-## 基本类型原子类
+### 基本类型原子类
 
 上面提到的三个类使用方式几乎相同，所以这里仅以 `AtomicInteger` 为例子来介绍。
 
@@ -72,7 +74,7 @@ public class AtomicIntegerTest {
 
 `AtomicInteger` 类主要利用 CAS (compare and swap) + `volatile` 和 native 方法来保证原子操作，从而避免 `synchronized` 的高开销，执行效率大为提升。`UnSafe#objectFieldOffset()` 方法是一个本地方法，这个方法是用来拿到“原来的值”的内存地址。
 
-## 数组类型原子类
+### 数组类型原子类
 
 上面提到的三个类使用方式几乎相同，所以这里仅以 `AtomicIntegerArray` 为例子来介绍。
 
@@ -109,7 +111,7 @@ public class AtomicIntegerArrayTest {
 }
 ```
 
-## 引用类型原子类
+### 引用类型原子类
 
 基本类型原子类只能更新一个变量，如果需要原子更新多个变量，需要使用引用类型原子类。
 
@@ -256,7 +258,7 @@ currentValue=null, currentMark=false
 currentValue=true, currentMark=true, wCasResult=true
 ```
 
-## 对象的属性修改类型原子类
+### 对象的属性修改类型原子类
 
 如果需要原子更新某个类里的某个字段时，需要用到对象的属性修改类型原子类。要想原子地更新对象的属性需要两步：
 1. 因为对象的属性修改类型原子类都是抽象类，所以每次使用都必须使用静态方法 newUpdater()创建一个更新器，并且需要设置想要更新的类和属性。
@@ -291,11 +293,11 @@ static class User {
 }
 ```
 
-# Unsafe一探究竟
+## Unsafe一探究竟
 
 Java中的 `Unsafe` 类是一个非常特殊的类，它提供了一些不安全的操作，这些操作通常是Java语言中不允许的，比如直接操作内存、线程挂起、CAS操作等。`Unsafe` 类主要用于Java的底层实现，比如JVM、NIO等，一般情况下不建议开发者直接使用Unsafe类。 `Unsafe` 类的存在是为了方便Java底层的实现，同时也提供了一些高级的操作，比如原子操作、内存分配等，这些操作可以在某些情况下提高程序的性能。
 
-## CAS操作
+### CAS操作
 
  `Unsafe` 类提供了最基本的CAS操作的API。
 
@@ -305,9 +307,9 @@ public final native boolean compareAndSwapInt(Object o, long offset,int expected
 public final native boolean compareAndSwapLong(Object o, long offset,long expected,long x);
 ```
 
-## 内存操作
+### 内存操作
 
-### 直接内存操作
+#### 直接内存操作
 
 ```java
 /分配内存指定大小的内存
@@ -336,7 +338,7 @@ public native void  putByte(long address, byte x);
 public native int pageSize();
 ```
 
-### 对象以及相关操作
+#### 对象以及相关操作
 
 ```java
 //传入一个对象的class并创建该实例对象，但不会调用构造方法
@@ -375,7 +377,7 @@ public native int getIntVolatile(Object o, long offset);
 public native void putOrderedInt(Object o,long offset,int x);
 ```
 
-### 数组以及相关操作
+#### 数组以及相关操作
 
 ```java
 //获取数组第一个元素的偏移地址
@@ -384,7 +386,7 @@ public native int arrayBaseOffset(Class arrayClass);
 public native int arrayIndexScale(Class arrayClass);
 ```
 
-## 线程操作
+### 线程操作
 
 将一个线程进行挂起是通过 `park` 方法实现的，调用 `park` 后，线程将一直阻塞直到超时或者中断等条件出现。 `unpark` 可以终止一个挂起的线程，使其恢复正常。Java对线程的挂起操作被封装在 `LockSupport` 类中，`LockSupport` 类中有各种版本 `pack` 方法，其底层实现最终还是使用 `Unsafe.park()` 方法和 `Unsafe.unpark()` 方法来实现。
 
@@ -396,7 +398,7 @@ public native void park(boolean isAbsolute, long time);
 public native void unpark(Object thread); 
 ```
 
-## 内存屏障
+### 内存屏障
 
 内存屏障（Memory Barrier）就是通过阻止屏障两边的**指令重排序**从而避免编译器和硬件的不正确优化情况。
 
@@ -409,7 +411,7 @@ public native void storeFence();
 public native void fullFence();
 ```
 
-## 其他操作
+### 其他操作
 
 ```java
 //获取持有锁，已不建议使用
@@ -436,7 +438,7 @@ public native boolean shouldBeInitialized(Class<?> c);
 public native  void ensureClassInitialized(Class<?> c);
 ```
 
-# 参考资料
+## 参考资料
 
 * [JavaGuide - Atomic原子类总结](https://javaguide.cn/java/concurrent/atomic-classes.html)
 * [JavaGuide - Java 魔法类 Unsafe 详解](https://javaguide.cn/java/basis/unsafe.html)

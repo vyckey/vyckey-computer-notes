@@ -143,7 +143,7 @@ typedef struct zskiplistNode {
 
 ![](../../static/images/database/redis/redis_skiplist.png)
 
-算法原理详解，请看[Skip-List算法](../../algorithm/skip-list.md)。
+算法原理详解，请看[Skip-List算法](../../docs/algorithm/skip-list.md)。
 
 ### 整数集合（intset）
 

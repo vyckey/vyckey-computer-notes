@@ -19,7 +19,7 @@ AQS中的队列是CLH（Craig、Landin and Hagersten）变种，非单向链表�
 
 AQS使用一个 `volatile int state` 的成员变量来表示同步状态，通过内置的**FIFO队列**来完成资源获取的排队工作，通过 **CAS** 完成对状态值的修改。
 
-# 参考资料
+## 参考资料
 
 * [JavaGuide - AQS 详解](https://javaguide.cn/java/concurrent/aqs.html)
 * [美团技术团队 - 从ReentrantLock的实现看AQS的原理及应用](https://tech.meituan.com/2019/12/05/aqs-theory-and-apply.html)

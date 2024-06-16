@@ -30,11 +30,11 @@ public class PrintArrayListGrow {
 }
 ```
 
-### LinkedList
+## LinkedList
 
 ## CopyOnWriteList
 
-# 参考资料
+## 参考资料
 
 * [JavaGuide - ArrayList 源码分析](https://javaguide.cn/java/collection/arraylist-source-code.html)
 * [JavaGuide - LinkedList 源码分析](https://javaguide.cn/java/collection/linkedlist-source-code.html)

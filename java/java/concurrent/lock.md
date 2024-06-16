@@ -662,6 +662,11 @@ public interface ReadWriteLock {
 
 `CyclicBarrier` 和 `CountDownLatch` 非常类似，它也可以实现多线程屏障，但是它的功能比 `CountDownLatch` 更加复杂和强大。主要应用场景和 `CountDownLatch` 类似。
 
+:::tip `CyclicBarrier` 和 `CountDownLatch` 有什么区别？
+1. `CountDownLatch` 是多个线程都进行了 `countDown` 之后才会触发事件，唤醒 `await` 在 `latch` 上的线程，执行完 `countDown` 操作之后会继续自己线程的工作。而 `CyclicBarrier` 是一个栅栏，用于同步所有调用 `await` 方法的线程，等到所有的方法都执行了 `await` 方法后，所有的线程才会返回各自执行自己的工作。
+2. `CountDownLatch` 计数器只能使用一次，而 `CyclicBarrier` 的计数器可以调用 `reset()` 方法重置，能处理更加复杂的业务场景。
+:::
+
 ## SynchronousQueue
 
 

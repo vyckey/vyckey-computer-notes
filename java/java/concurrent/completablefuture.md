@@ -5,7 +5,9 @@ sidebar_label: CompletableFuture
 sidebar_position: 1
 ---
 
-# Future 知识回顾
+# CompletableFuture
+
+## Future 知识回顾
 
 **`Future` 接口用于代表异步计算的结果**，通过 `Future` 接口提供的方法可以查看异步计算是否执行完成，或者等待执行结果并获取执行结果，同时还可以取消执行。以下是 `Future` 接口的方法：
 
@@ -73,7 +75,7 @@ public static void main(String[] args) {
 
 使用 `Future` 接口可以通过 `get()` 阻塞式获取结果或者通过轮询＋ `isDone()` 非阻塞式获取结果，但是前一种方法会阻塞，后一种会耗费CPU资源，所以JDK的 `Future` 接口实现异步执行对获取结果不太友好，所以在JDK8时推出了 `CompletableFuture` 实现异步编排。
 
-# CompletableFuture 和 Future 的对比
+## CompletableFuture 和 Future 的对比
 
 `CompletableFuture` 是JDK8中新增的异步编程工具类，它是 `Future` 的扩展，提供了更加强大的异步编程能力。主要区别如下：
 
@@ -85,7 +87,7 @@ public static void main(String[] args) {
 
 综上所述， `CompletableFuture` 比 `Future` 更加灵活和强大，可以更方便地进行异步编程。
 
-# CompletableFuture 提供的API
+## CompletableFuture 提供的API
 
 JDK8中新增加了一个包含50个方法左右的类 `CompletableFuture` ，提供了非常强大的 `Future` 的扩展功能，可以帮助我们简化异步编程的复杂性，提供了函数式编程的能力，可以通过回调的方式处理计算结果，并且提供了转换和组合 `CompletableFuture` `的方法。CompletableFuture` 类实现了 `Future` 接口和 `CompletionStage` 接口。 `CompletionStage` 的方法可参考源码进行查看。
 
@@ -95,7 +97,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 }
 ```
 
-## CompletableFuture 的创建
+### CompletableFuture 的创建
 
 ```java
 // 无返回值或固定值构造
@@ -111,7 +113,7 @@ public static <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier)
 public static <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier, Executor executor);
 ```
 
-## 获取异步执行结果
+### 获取异步执行结果
 
 除了 `Future` 提供的方法之外，还有：
 
@@ -126,7 +128,7 @@ public T join();
 public boolean complete(T value);
 ```
 
-## 对异步执行结果的处理
+### 对异步执行结果的处理
 
 ```java
 // 等待前面任务执行完再执行当前action处理，action的第一个参数是计算结果，第二个是异常
@@ -156,9 +158,9 @@ public <U> CompletableFuture<U> handleAsync(BiFunction<? super T, Throwable, ? e
 public <U> CompletableFuture<U> handleAsync(BiFunction<? super T, Throwable, ? extends U> fn, Executor executor);
 ```
 
-## 多任务执行
+### 多任务执行
 
-### 任务串行化
+#### 任务串行化
 
 ```java
 public CompletableFuture<Void> thenRun(Runnable action);
@@ -171,7 +173,7 @@ public <U> CompletableFuture<U> thenComposeAsync(Function<? super T, ? extends C
 public <U> CompletableFuture<U> thenComposeAsync(Function<? super T, ? extends CompletionStage<U>> fn, Executor executor);
 ```
 
-### 任务赛跑，取最快的任务
+#### 任务赛跑，取最快的任务
 
 ```java
 // 比较两组任务的执行速度，谁先执行完就用谁的执行结果。
@@ -189,7 +191,7 @@ CompletableFuture<Void> runAfterEitherAsync(CompletionStage<?> other, Runnable a
 CompletableFuture<Void> runAfterEitherAsync(CompletionStage<?> other, Runnable action, Executor executor);
 ```
 
-### 两任务结果合并
+#### 两任务结果合并
 
 ```java
 // 两组任务都完成后，将两组任务的执行结果一起交给当前方法的BiFunction处理
@@ -208,7 +210,7 @@ public CompletableFuture<Void> runAfterBothAsync(CompletionStage<?> other, Runna
 public CompletableFuture<Void> runAfterBothAsync(CompletionStage<?> other, Runnable action, Executor executor);
 ```
 
-### 多任务组合
+#### 多任务组合
 
 ```java
 // 等待所有的任务执行完毕再返回
@@ -217,13 +219,13 @@ public static CompletableFuture<Void> allOf(CompletableFuture<?>... cfs);
 public static CompletableFuture<Object> anyOf(CompletableFuture<?>... cfs);
 ```
 
-## API总结
+### API总结
 
 * 后跟无返回值Consumer的关键词方法：**`when`, `accept`, `run`**。
 * 后跟有返回值的方法： **`apply`, `handle`, `compose`, `combine`**。
 * 两个任务的联合操作：**`both`, `compose`, `combine`, `either`**。
 
-## 使用样例
+### 使用样例
 
 ```java
 /**
@@ -290,9 +292,9 @@ public SkuItemVo item(Long skuId) throws ExecutionException, InterruptedExceptio
 }
 ```
 
-# 原理详解
+## 原理详解
 
-## 任务依赖
+### 任务依赖
 
 如下是 `CompletableFuture` 任务的依赖树关系图样例，描述了6个任务之间的依赖关系，任务之间有串行，也有并行。
 
@@ -391,7 +393,7 @@ CF4 -.-> CF6
 CF5 -.-> CF6
 CF6 --> E(结束)
 ```
-# 参考资料
+## 参考资料
 
 * [掘金 - CompletableFuture实现异步编排](https://juejin.cn/post/7193589084915236901)
 * [掘金 - 搞定 CompletableFuture，并发异步编程和编写串行程序还有什么区别？](https://juejin.cn/post/6854573213108666381)

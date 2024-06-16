@@ -5,17 +5,19 @@ sidebar_label: ThreadLocal
 sidebar_position: 1
 ---
 
-# 介绍
+# ThreadLocal
+
+## 介绍
 
 > This class provides thread-local variables. These variables differ from their normal counterparts in that each thread that accesses one (via its get or set method) has its own, independently initialized copy of the variable. ThreadLocal instances are typically private static fields in classes that wish to associate state with a thread (e.g., a user ID or Transaction ID).
 
 `ThreadLocal` 是一个将在多线程中为每一个线程创建单独的变量副本的类; 当使用 `ThreadLocal` 来维护变量时, `ThreadLocal` 会为每个线程创建单独的变量副本, 避免因多线程操作共享变量而导致的数据不一致的情况。
 
-# 使用场景
+## 使用场景
 
-# 数据结构
+## 数据结构
 
-## ThreadLocal数据结构
+### ThreadLocal数据结构
 
 `Thread` 类有一个类型为 `ThreadLocal.ThreadLocalMap` 的实例变量 `threadLocals` ，也就是说每个线程有一个自己的 `ThreadLocalMap` 。`ThreadLocalMap` 有自己的独立实现，可以简单地将它的 `key` 视作 `ThreadLocal` （实际上 `key` 并不是 `ThreadLocal` 本身，而是它的一个弱引用）， `value` 为代码中放入的值。每个线程在往 `ThreadLocal` 里放值的时候，都会往自己的 `ThreadLocalMap` 里存，读也是以 `ThreadLocal` 作为引用，在自己的 `map` 里找对应的 `key` ，从而实现了线程隔离。 `ThreadLocalMap` 有点类似 `HashMap` 的结构，只是 `HashMap` 是由数组+链表实现的，而 `ThreadLocalMap` 中并没有链表结构。我们还要注意 `Entry` ， 它的 `key` 是 `ThreadLocal<?> k `，继承自 `WeakReference` ，也就是我们常说的弱引用类型。
 
@@ -65,7 +67,7 @@ public class ThreadLocal<T> {
 }
 ```
 
-## ThreadLocalMap数据结构
+### ThreadLocalMap数据结构
 
 ```java
 static class ThreadLocalMap {
@@ -102,17 +104,17 @@ static class ThreadLocalMap {
 }
 ```
 
-## ThreadLocal的Entry设计
+### ThreadLocal的Entry设计
 
 ![](../../../static/images/java/concurrent/threadlocal-reference.png)
 
-### 为什么Entry要使用弱引用？
+#### 为什么Entry要使用弱引用？
 
 弱引用对象有更短暂的生命周期，不管内存空间是否剩余，都有可能会被回收。
 
 假如每个 `key` 都强引用指向 `ThreadLocal` 的对象，也就是上图虚线那里是个强引用，那么这个 `ThreadLocal` 对象就会因为和 `Entry` 对象存在强引用关联而无法被GC回收，造成**内存泄漏**，除非线程结束后，线程被回收了， `map` 也跟着回收。
 
-### 为什么还是会出现内存泄露？
+#### 为什么还是会出现内存泄露？
 
 当把 `ThreadLocal` 对象的引用置为 `null` 后，没有任何强引用指向内存中的 `ThreadLocal` 实例，`threadLocals` 的 `key` 是它的弱引用，故它将会被GC回收。
 
@@ -121,7 +123,7 @@ static class ThreadLocalMap {
 
 解决内存泄露的方法：当线程的某个 `ThreadLocal` 对象使用完了，马上调用 `remove` 方法，删除 `Entry` 对象。只要这个线程对象及时被GC回收，这个内存泄露问题影响不大，只发生在 `ThreadLocal` 对象的引用设为 `null` 到线程结束的这段时间内。但在使用线程池的时候，线程结束是不会被销毁的，会再次使用，就可能出现真正的内存泄露。
 
-### 在 ThreadLocal.get()的时候，发生GC之后，key 是否为null？
+#### 在 ThreadLocal.get()的时候，发生GC之后，key 是否为null？
 
 网上有相关的源码调试可以进行测：[CSDN - 测试ThreadLocal 在gc后引发的threadLocalMap的key为null,但value不为null的情况](https://blog.csdn.net/thewindkee/article/details/103726942)。
 
@@ -129,7 +131,9 @@ static class ThreadLocalMap {
 
 ![](../../../static/images/java/concurrent/threadlocal-reference2.png)
 
-## ThreadLocal的Hash算法
+## ThreadLocal底层实现
+
+### ThreadLocal的Hash算法
 
 ```java
 public class ThreadLocal<T> {
@@ -159,7 +163,7 @@ public class ThreadLocal<T> {
 
 每当创建一个 `ThreadLocal` 对象，这个 `ThreadLocal.nextHashCode` 这个值就会增长 `0x61c88647` 。这个值是**斐波那契数**，也叫**黄金分割数**，可以使散列效果非常好。
 
-## ThreadLocalMap的Hash冲突
+### ThreadLocalMap的Hash冲突
 
 虽然 `ThreadLocalMap` 中使用了黄金分割数来作为 `hash` 计算因子，大大减少了 `hash` 冲突的概率，但是仍然会存在冲突。`HashMap` 中解决冲突的方法是在数组上构造一个链表结构，冲突的数据挂载到链表上，如果链表长度超过一定数量则会转化成红黑树。而 `ThreadLocalMap` 中并没有链表结构，所以这里不能使用 `HashMap` 解决冲突的方式了。
 
@@ -171,7 +175,7 @@ public class ThreadLocal<T> {
 
 这里还画了一个 `Entry` 中的 `key` 为 `null` 的数据（`Entry=2` 的灰色块数据），因为 `key` 值是弱引用类型，所以会有这种数据存在。在 `set` 过程中，如果遇到了 `key` 过期的 `Entry` 数据，实际上是会进行一轮探测式清理操作的，具体操作方式后面会讲到。
 
-## ThreadLocalMap的get原理
+### ThreadLocalMap的get原理
 
 下面是 `ThreadLocalMap.get()` 方法的核心代码实现：
 
@@ -215,7 +219,7 @@ public class ThreadLocal<T> {
 
 ![](../../../static/images/java/concurrent/threadlocal-get3.png)
 
-## ThreadLocalMap的set原理
+### ThreadLocalMap的set原理
 
 下面是 `ThreadLocalMap.set()` 方法的核心代码实现：
 
@@ -252,28 +256,32 @@ public class ThreadLocal<T> {
 往 `ThreadLocalMap` 中 `set` 数据（新增或者更新数据）分为好几种情况，针对不同的情况我们画图来说明。
 
 第一种情况： 通过hash计算后的槽位对应的Entry数据为空，这里直接将数据放到该槽位即可：
+
 ![](../../../static/images/java/concurrent/threadlocal-set1.png)
 
 第二种情况： 槽位数据不为空，`key` 值与当前 `ThreadLocal` 通过 `hash` 计算获取的 `key` 值一致：这里直接更新该槽位的数据。
+
 ![](../../../static/images/java/concurrent/threadlocal-set2.png)
 
 第三种情况： 槽位数据不为空，往后遍历过程中，在找到 `Entry` 为 `null` 的槽位之前，没有遇到 `key` 过期的 `Entry` 。遍历散列数组，线性往后查找，如果找到 `Entry` 为 `null` 的槽位，则将数据放入该槽位中，或者往后遍历过程中，遇到了 `key` 值相等的数据，直接更新即可。
+
 ![](../../../static/images/java/concurrent/threadlocal-set3.png)
 
 第四种情况： 槽位数据不为空，往后遍历过程中，在找到 `Entry` 为 `null` 的槽位之前，遇到 `key` 过期的 `Entry` ，如下图，往后遍历过程中，遇到了 `index=7` 的槽位数据 Entry 的 `key=null`：
+
 ![](../../../static/images/java/concurrent/threadlocal-set4.png)
 
 散列数组下标为 `7` 位置对应的 `Entry` 数据 `key` 为 `null` ，表明此数据 `key` 值已经被垃圾回收掉了。此时就会执行 `replaceStaleEntry()` 方法，该方法含义是替换过期数据的逻辑，以 `index=7` 位起点开始遍历，进行**探测式数据清理**工作（后一章节会详细介绍），最后替换新的值 。
 
 替换完成后也是进行过期元素清理工作，清理工作主要是有两个方法：`expungeStaleEntry()` 和 `cleanSomeSlots()` ，具体细节后续章节详细介绍。
 
-## ThreadLocalMap清理机制
+### ThreadLocalMap清理机制
 
 `ThreadLocalMap` 过期 `key` 的两种清理方式：**探测式清理(`expungeStaleEntry()`)**、**启发式清理(`cleanSomeSlots()`)**。
 
-### 探测式清理
+#### 探测式清理
 
-#### replaceStaleEntry()
+##### replaceStaleEntry()
 
 该方法主要用在 `ThreadLocalMap.set()` 方法，用来清理数据，并进行填充 `Entry`。
 
@@ -332,15 +340,19 @@ public class ThreadLocal<T> {
 ```
 
 1. 假定散列数组下标为 `7` 位置对应的 `Entry` 数据 `key` 为 `null` ：
+
 ![](../../../static/images/java/concurrent/threadlocal-set4.png)
 
 2. 以当前 `staleSlot` 开始向前迭代查找，找其他过期的数据，然后更新过期数据起始扫描下标 `slotToExpunge` 。`for` 循环迭代，直到碰到 `Entry` 为 `null` 结束。初始化探测式清理过期数据扫描的开始位置：`slotToExpunge = staleSlot = 7` 。以当前节点(`index=7`)向前迭代，检测是否有过期的 `Entry` 数据，如果有则更新 `slotToExpunge` 值。碰到 `null` 则结束探测。以上图为例 `slotToExpunge` 被更新为 `0` 。
+
 ![](../../../static/images/java/concurrent/threadlocal-set5.png)
 
 3. 接着开始以 `staleSlot` 位置(`index=7`)向后迭代，如果找到了相同 `key` 值的 `Entry` 数据：
+
 ![](../../../static/images/java/concurrent/threadlocal-set6.png)
 
 4. 从当前节点 `staleSlot` 向后查找 `key` 值相等的 `Entry` 元素，找到后更新 `Entry` 的值并交换 `staleSlot` 元素的位置( `staleSlot` 位置为过期元素)，更新 `Entry` 数据，然后开始进行过期 `Entry` 的清理工作，如下图所示：
+
 ![](../../../static/images/java/concurrent/threadlocal-set7.png)
 
 5. 向后遍历过程中，如果没有找到相同 `key` 值的 `Entry` 数据，直到 `Entry` 为 `null` 则停止寻找。创建新的 `Entry` ，替换 `table[stableSlot]` 位置：
@@ -350,7 +362,7 @@ public class ThreadLocal<T> {
 
 
 
-#### expungeStaleEntry()
+##### expungeStaleEntry()
 
 探测式清理 `expungeStaleEntry` 方法，遍历散列数组，从开始位置向后探测清理过期数据，将过期数据的 `Entry` 设置为 `null` ，沿途中碰到未过期的数据则将此数据 `rehash` 后重新在 `table` 数组中定位，如果定位的位置已经有了数据，则会将未过期的数据放到最靠近此位置的 `Entry=null` 的桶中，使 `rehash` 后的 `Entry` 数据距离正确的桶的位置更近一些。
 
@@ -390,14 +402,15 @@ public class ThreadLocal<T> {
 ```
 
 1. 如下图，`set(27)` 经过 `hash` 计算后应该落到 `index=4` 的桶中，由于 `index=4` 桶已经有了数据，所以往后迭代最终数据放入到 `index=7` 的桶中，放入后一段时间后 `index=5` 中的 `Entry` 数据 `key` 变为了 `null` 。如果再有其他数据 `set` 到 `map` 中，就会触发探测式清理操作。
+
 ![](../../../static/images/java/concurrent/threadlocal-expunge1.png)
 
-1. 执行探测式清理后，`index=5` 的数据被清理掉，继续往后迭代，到 `index=7` 的元素时，经过 `rehash` 后发现该元素正确的 `index=4` ，而此位置已经有了数据，往后查找离 `index=4` 最近的 `Entry=null` 的节点(刚被探测式清理掉的数据：`index=5` )，找到后移动 `index=7` 的数据到 `index=5` 中，此时桶的位置离正确的位置 `index=4` 更近了。经过一轮探测式清理后， `key` 过期的数据会被清理掉，没过期的数据经过 `rehash` 重定位后所处的桶位置理论上更接近 `i = key.hashCode & (tab.len - 1)` 的位置。这种优化会提高整个散列表查询性能。
+2. 执行探测式清理后，`index=5` 的数据被清理掉，继续往后迭代，到 `index=7` 的元素时，经过 `rehash` 后发现该元素正确的 `index=4` ，而此位置已经有了数据，往后查找离 `index=4` 最近的 `Entry=null` 的节点(刚被探测式清理掉的数据：`index=5` )，找到后移动 `index=7` 的数据到 `index=5` 中，此时桶的位置离正确的位置 `index=4` 更近了。经过一轮探测式清理后， `key` 过期的数据会被清理掉，没过期的数据经过 `rehash` 重定位后所处的桶位置理论上更接近 `i = key.hashCode & (tab.len - 1)` 的位置。这种优化会提高整个散列表查询性能。
 
 ![](../../../static/images/java/concurrent/threadlocal-expunge2.png)
 
 
-### 启发式清理
+#### 启发式清理
 
 探测式清理是以当前 `Entry` 往后清理，遇到值为 `null` 则结束清理，属于线性探测清理。而启发式清理被作者定义为：`Heuristically scan some cells looking for stale entries.`。
 
@@ -421,7 +434,7 @@ public class ThreadLocal<T> {
 
 ![](../../../static/images/java/concurrent/threadlocal-clean.png)
 
-## ThreadLocalMap扩容机制
+### ThreadLocalMap扩容机制
 
 在 `ThreadLocalMap.set()` 方法的最后，如果执行完启发式清理工作后，未清理到任何数据，且当前散列数组中 `Entry` 的数量已经达到了列表的扩容阈值(`len*2/3`)，就开始执行 `rehash()` 逻辑：
 
@@ -487,7 +500,7 @@ public class ThreadLocal<T> {
 
 扩容后的 `tab` 的大小为 `oldLen * 2` ，接着遍历老的散列表，重新计算 `hash` 位置，然后放到新的 `tab` 数组中，如果出现 `hash` 冲突则往后寻找最近的 `entry` 为 `null` 的槽位，遍历完成之后， `oldTab` 中所有的 `entry` 数据都已经放入到新的 `tab` 中了。重新计算 `tab` 下次扩容的阈值。
 
-# ThreadLocal的多线程继承
+## ThreadLocal的多线程继承
 
 有些业务场景需要在多线程之前传递 `ThreadLocal` 的值，例如：
 
@@ -496,7 +509,7 @@ public class ThreadLocal<T> {
 3. Session级Cache
 4. 应用容器或上层框架跨应用代码给下层SDK传递信息
 
-## InheritableThreadLocal
+### InheritableThreadLocal
 
 我们使用 `ThreadLocal` 的时候，在异步场景下是无法给子线程共享父线程中创建的线程副本数据的。为了解决这个问题，JDK 中还有一个 `InheritableThreadLocal` 类。
 
@@ -522,11 +535,11 @@ private void init(ThreadGroup g, Runnable target, String name,
 
 当然，有问题出现就会有解决问题的方案，阿里巴巴开源了一个 `TransmittableThreadLocal` 组件就可以解决这个问题。
 
-## TransmittableThreadLocal
+### TransmittableThreadLocal
 
 `TransmittableThreadLocal(TTL)`，解决了 `InheritableThreadLocal` 的不足，在使用线程池等会池化复用线程的执行组件情况下，提供 `ThreadLocal` 值的传递功能，很好地解决异步执行时上下文传递的问题。具体实现可参考[GitHub - alibaba/transmittable-thread-local](https://github.com/alibaba/transmittable-thread-local)。
 
-### TTL使用教程
+#### TTL使用教程
 
 1. 直接使用方式：
 
@@ -542,7 +555,7 @@ context.set("value-set-in-parent");
 String value = context.get();
 ```
 
-2. 修饰Runnable和Callable
+2. 修饰 `Runnable` 和 `Callable`
 
 ```java
 TransmittableThreadLocal<String> context = new TransmittableThreadLocal<>();
@@ -604,9 +617,9 @@ java -javaagent:path/to/transmittable-thread-local-2.5.1.jar \
     com.alibaba.demo.ttl.agent.AgentDemo
 ```
 
-### 核心原理介绍
+#### 核心原理介绍
 
-# 参考资料
+## 参考资料
 
 * [JavaGuide - ThreadLocal详解](https://javaguide.cn/java/concurrent/threadlocal.html)
 * [微信公众号 - Java AQS 核心数据结构-CLH 锁](https://mp.weixin.qq.com/s/jEx-4XhNGOFdCo4Nou5tqg)
