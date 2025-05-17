@@ -70,7 +70,7 @@ Slf4j和其他桥接器日志组件jar包说明
 | slf4j-nop-2.0.0.jar | NOP桥接器，默认丢弃一切日志 |
 | slf4j-simple-2.0.0.jar | 一个简单实现的桥接器，该实现输出所有事件到System.err. 只有Info以及高于该级别的消息被打印，用在小型应用中 |
 | slf4j-jcl-2.0.0.jar | Jakarta Commons Logging 的桥接器. 桥接器将Slf4j所有日志委派给Jcl |
-| logback-classic-${logback.version}.jar | Slf4j的原生实现，Logback直接实现了Slf4j的接口，因此使用Slf4j与Logback的结合使用也意味更小的内存与计算开销 |
+| logback-classic-$\{logback.version\}.jar | Slf4j的原生实现，Logback直接实现了Slf4j的接口，因此使用Slf4j与Logback的结合使用也意味更小的内存与计算开销 |
 
 ![slf4j-bindings](../../../static/images/framework/slf4j-bindings.png)
 

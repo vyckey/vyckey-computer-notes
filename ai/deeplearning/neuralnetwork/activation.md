@@ -35,7 +35,7 @@ $$
 \end{align}
 $$
 
-![](../../../static/images/deeplearning/nerualnetwork/relu_gelu.png)
+![](../../../static/images/deeplearning/nerualnetwork/nn_relu_gelu.png)
 
 ## Leaky ReLU
 

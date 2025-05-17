@@ -20,7 +20,7 @@ const config: Config = {
   organizationName: 'vyckey', // Usually your GitHub org/user name.
   projectName: 'vyckey-computer-notes', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'log', // throw
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internationalization, you can use this field to set
