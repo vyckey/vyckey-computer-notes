@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[4534],{90105:e=>{e.exports=JSON.parse('{"tag":{"label":"tool","permalink":"/docs/tags/tool","allTagsPath":"/docs/tags","count":1,"items":[{"id":"tools/index","title":"Tools","description":"","permalink":"/docs/tools/"}],"unlisted":false}}')}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[3305],{37791:e=>{e.exports=JSON.parse('{"tag":{"label":"bert","permalink":"/ai/tags/bert","allTagsPath":"/ai/tags","count":1,"items":[{"id":"deeplearning/nlp/bert/index","title":"BERT","description":"","permalink":"/ai/deeplearning/nlp/bert/"}],"unlisted":false}}')}}]);

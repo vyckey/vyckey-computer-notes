@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[6238],{58376:e=>{e.exports=JSON.parse('{"tag":{"label":"framework","permalink":"/java/tags/framework","allTagsPath":"/java/tags","count":1,"items":[{"id":"framework/index","title":"Framework","description":"","permalink":"/java/framework/"}],"unlisted":false}}')}}]);

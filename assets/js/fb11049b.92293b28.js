@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[3288],{9725:a=>{a.exports=JSON.parse('{"tags":[{"label":"bigdata","permalink":"/bigdata/tags/bigdata","count":2},{"label":"spark","permalink":"/bigdata/tags/spark","count":1}]}')}}]);

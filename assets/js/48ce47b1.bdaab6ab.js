@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[5199],{48221:a=>{a.exports=JSON.parse('{"tag":{"label":"jni","permalink":"/java/tags/jni","allTagsPath":"/java/tags","count":1,"items":[{"id":"java/more/jni","title":"JNI","description":"\u53c2\u8003\u8d44\u6599","permalink":"/java/java/more/jni"}],"unlisted":false}}')}}]);

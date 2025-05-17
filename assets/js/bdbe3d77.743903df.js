@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[1065],{30235:a=>{a.exports=JSON.parse('{"tag":{"label":"io","permalink":"/java/tags/io","allTagsPath":"/java/tags","count":1,"items":[{"id":"java/io/index","title":"IO","description":"\u5b57\u8282\u6d41","permalink":"/java/java/io/"}],"unlisted":false}}')}}]);

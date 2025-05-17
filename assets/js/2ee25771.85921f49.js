@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[7637],{91238:e=>{e.exports=JSON.parse('{"tag":{"label":"tree","permalink":"/docs/tags/tree","allTagsPath":"/docs/tags","count":1,"items":[{"id":"algorithm/tree/index","title":"Tree Algorithm","description":"","permalink":"/docs/algorithm/tree/"}],"unlisted":false}}')}}]);

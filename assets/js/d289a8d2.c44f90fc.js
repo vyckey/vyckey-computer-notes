@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[4087],{64652:e=>{e.exports=JSON.parse('{"tag":{"label":"tcp","permalink":"/docs/tags/tcp","allTagsPath":"/docs/tags","count":1,"items":[{"id":"network/tcp","title":"TCP","description":"\u91cd\u4f20\u673a\u5236","permalink":"/docs/network/tcp"}],"unlisted":false}}')}}]);

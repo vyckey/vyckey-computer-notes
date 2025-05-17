@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[1053],{98613:e=>{e.exports=JSON.parse('{"name":"docusaurus-plugin-content-docs","id":"database"}')}}]);

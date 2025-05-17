@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[3785],{59231:e=>{e.exports=JSON.parse('{"tag":{"label":"theory","permalink":"/ai/tags/theory","allTagsPath":"/ai/tags","count":1,"items":[{"id":"theory/index","title":"Theory","description":"","permalink":"/ai/theory/"}],"unlisted":false}}')}}]);

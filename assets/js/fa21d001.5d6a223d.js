@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[1282],{15403:e=>{e.exports=JSON.parse('{"tag":{"label":"models","permalink":"/ai/tags/models","allTagsPath":"/ai/tags","count":1,"items":[{"id":"deeplearning/models/index","title":"Models","description":"","permalink":"/ai/deeplearning/models/"}],"unlisted":false}}')}}]);

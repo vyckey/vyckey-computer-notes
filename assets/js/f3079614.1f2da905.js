@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[2147],{27700:e=>{e.exports=JSON.parse('{"tag":{"label":"graph","permalink":"/docs/tags/graph","allTagsPath":"/docs/tags","count":1,"items":[{"id":"algorithm/graph/index","title":"Graph Algoritm","description":"","permalink":"/docs/algorithm/graph/"}],"unlisted":false}}')}}]);

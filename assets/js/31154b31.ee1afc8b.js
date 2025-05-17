@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[5775],{49846:e=>{e.exports=JSON.parse('{"tags":[{"label":"material","permalink":"/Material/tags/material","count":1},{"label":"interview","permalink":"/Material/tags/interview","count":1}]}')}}]);

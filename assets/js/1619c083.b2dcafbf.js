@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[4110],{10737:a=>{a.exports=JSON.parse('{"tag":{"label":"library","permalink":"/java/tags/library","allTagsPath":"/java/tags","count":1,"items":[{"id":"library/index","title":"Library","description":"","permalink":"/java/library/"}],"unlisted":false}}')}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[355],{20252:e=>{e.exports=JSON.parse('{"tag":{"label":"time","permalink":"/java/tags/time","allTagsPath":"/java/tags","count":1,"items":[{"id":"java/util/date","title":"Time","description":"\u5e38\u7528\u8f6c\u6362","permalink":"/java/java/util/date"}],"unlisted":false}}')}}]);

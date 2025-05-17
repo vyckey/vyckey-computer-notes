@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[1819],{17486:e=>{e.exports=JSON.parse('{"tag":{"label":"tool","permalink":"/java/tags/tool","allTagsPath":"/java/tags","count":1,"items":[{"id":"tools/index","title":"Tools","description":"","permalink":"/java/tools/"}],"unlisted":false}}')}}]);

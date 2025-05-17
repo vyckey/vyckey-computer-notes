@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[8048],{492:e=>{e.exports=JSON.parse('{"tag":{"label":"code","permalink":"/ai/tags/code","allTagsPath":"/ai/tags","count":1,"items":[{"id":"agent/project","title":"Project","description":"Common Agent","permalink":"/ai/agent/project"}],"unlisted":false}}')}}]);

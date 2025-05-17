@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvyckey_computer_notes=self.webpackChunkvyckey_computer_notes||[]).push([[4116],{34805:e=>{e.exports=JSON.parse('{"tag":{"label":"osgi","permalink":"/docs/tags/osgi","allTagsPath":"/docs/tags","count":1,"items":[{"id":"architecture/osgi","title":"OSGI","description":"[toc]","permalink":"/docs/architecture/osgi"}],"unlisted":false}}')}}]);
