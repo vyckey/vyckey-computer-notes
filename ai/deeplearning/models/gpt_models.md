@@ -32,6 +32,10 @@ Llama 2是一个预训练和微调的生成文本模型的集合，其规模从7
 
 模型结构可参考[知乎-麦田守望者](https://zhuanlan.zhihu.com/p/647862867)的文章。
 
+### Llama3
+
+[Meta - Llama3.1](https://ai.meta.com/blog/meta-llama-3-1/)
+
 ## Google Gemma
 
 Gemma是谷歌的一个轻量级、最先进的开放模型家族，采用了与创建Gemini模型相同的研究和技术。它们是文本到文本、仅解码器的大型语言模型，有英文版本，具有开放权重、预训练变体和指令调整变体。Gemma模型非常适合各种文本生成任务，包括问答、摘要和推理。
@@ -61,6 +65,66 @@ Qwen1.5是一个语言模型系列，包括不同模型大小的解码器语言�
 
 * [huggingface Qwen/Qwen1.5-72B-Chat](https://huggingface.co/Qwen/Qwen1.5-72B-Chat)
 * [huggingface Qwen/Qwen1.5-14B-Chat](https://huggingface.co/Qwen/Qwen1.5-14B-Chat)
+
+
+## DeepSeek
+
+### DeepSeek V2
+
+技术报告
+
+* [GitHub - DeepSeek V2 Tech Report](https://github.com/deepseek-ai/DeepSeek-V2/blob/main/deepseek-v2-tech-report.pdf)
+
+模型下载地址：
+
+* DeepSeek-V2
+  * [Huggingface DeepSeek-V2](https://huggingface.co/deepseek-ai/DeepSeek-V2)
+  * [ModelScope DeepSeek-V2](https://www.modelscope.cn/models/deepseek-ai/DeepSeek-V2)
+* DeepSeek-V2-Chat
+  * [Huggingface DeepSeek-V2-Chat](https://huggingface.co/deepseek-ai/DeepSeek-V2-Chat)
+  * [ModelScope DeepSeek-V2-Chat](https://www.modelscope.cn/models/deepseek-ai/DeepSeek-V2-Chat)
+
+### DeepSeek V3
+
+发布时间：2024/12/27
+模型参数：671B
+
+[GitHub - deepseek-ai/DeepSeek-V3](https://github.com/deepseek-ai/DeepSeek-V3)
+
+技术报告：
+
+* [GitHub - DeepSeek V3](https://github.com/deepseek-ai/DeepSeek-V3/blob/main/DeepSeek_V3.pdf)
+
+模型下载地址：
+
+* DeepSeek-V3-Base
+  * [Huggingface DeepSeek-V3-Base](https://huggingface.co/deepseek-ai/DeepSeek-V3-Base)
+  * [ModelScope DeepSeek-V3-Base](https://www.modelscope.cn/models/deepseek-ai/DeepSeek-V3-Base)
+* DeepSeek-V3
+  * [Huggingface DeepSeek-V3](https://huggingface.co/deepseek-ai/DeepSeek-V3)
+  * [ModelScope DeepSeek-V3](https://www.modelscope.cn/models/deepseek-ai/DeepSeek-V3)
+
+### DeepSeek R1
+
+发布时间：2025/1/26
+模型参数：671B
+
+技术报告：
+
+* [GitHub - DeepSeek R1](https://github.com/deepseek-ai/DeepSeek-R1/blob/main/DeepSeek_R1.pdf)
+
+开源代码：
+
+* [GitHub - deepseek-ai/DeepSeek-R1](https://github.com/deepseek-ai/DeepSeek-R1)
+
+模型下载地址：
+
+* DeepSeek-R1-Zero
+  * [Huggingface DeepSeek-R1-Zero](https://huggingface.co/deepseek-ai/DeepSeek-R1-Zero)
+  * [ModelScope DeepSeek-R1-Zero](https://www.modelscope.cn/models/deepseek-ai/DeepSeek-R1-Zero)
+* DeepSeek-R1
+  * [Huggingface DeepSeek-R1](https://huggingface.co/deepseek-ai/DeepSeek-R1)
+  * [Huggingface DeepSeek-R1](https://www.modelscope.cn/models/deepseek-ai/DeepSeek-R1)
 
 # Closed-Source Models
 

@@ -9,4 +9,4 @@ sidebar_position: 10
 
 ## 参考资料
 
-* [Java全栈知识体系 - Java 垃圾回收器之ZGC详解](https://pdai.tech/md/java/jvm/java-jvm-gc-zgc.html)
+* [美团技术团队 - 新一代垃圾回收器ZGC的探索与实践](https://tech.meituan.com/2020/08/06/new-zgc-practice-in-meituan.html)

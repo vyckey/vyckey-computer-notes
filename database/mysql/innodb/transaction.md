@@ -144,7 +144,7 @@ Read View 的创建时机：
 * `READ COMMITTD` 在每一次进行普通 `SELECT` 操作前都会生成一个Read View。
 * `REPEATABLE READ` 只在第一次进行普通 `SELECT` 操作前生成一个Read View，之后的查询操作都重复使用这个Read View。
 
-# 参考资料
+## 参考资料
 
 * [掘金 - MySQL的MVCC机制 - JAVA旭阳](https://juejin.cn/post/7170234288041328654)
 * [CSDN - MySQL InnoDB的MVCC实现机制 - SnailMann](https://blog.csdn.net/SnailMann/article/details/94724197)

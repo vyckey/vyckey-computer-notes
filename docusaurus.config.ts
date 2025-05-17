@@ -129,6 +129,21 @@ const config: Config = {
         rehypePlugins: [rehypeKatex],
       }),
     ],
+    [
+      'content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'material',
+        path: 'material',
+        routeBasePath: 'Material',
+        editCurrentVersion: true,
+        sidebarPath: require.resolve('./sidebars.js'),
+        showLastUpdateAuthor: true,
+        showLastUpdateTime: true,
+        remarkPlugins: [remarkMath],
+        rehypePlugins: [rehypeKatex],
+      }),
+    ],
   ],
 
   presets: [
@@ -208,6 +223,7 @@ const config: Config = {
           ]
         },
         {to: '/frontend', label: 'Frontend', position: 'left'},
+        {to: '/material', label: 'Material', position: 'left'},
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/vyckey/vyckey-computer-notes',
