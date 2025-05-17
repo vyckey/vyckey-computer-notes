@@ -5,9 +5,9 @@ name: build & deploy notes.vyckey.github.io to GitHub Pages
 
 on:
   push:
-    branches: [ "main", "test"]
+    branches: [ "main", "master", "test"]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
 
 jobs:
   build:
